@@ -1,0 +1,60 @@
+---
+---
+
+<section
+  id="extensibility"
+  class="mt-20 font-display scroll-mt-16"
+>
+  <h2
+    class="text-[clamp(1.5rem,2.4vw,1.875rem)] font-medium text-fg leading-tight mb-6 max-w-3xl"
+  >
+    Extensibility
+  </h2>
+
+  <p class="text-[19px] leading-[1.65] text-fg max-w-3xl mb-12">
+    Both ends of VLAPilot are pluggable. The robot side speaks a thin
+    protocol; the mission side is a directory of three files. Swapping either
+    one requires no code changes.
+  </p>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    {/* ───────── Card 1: BYO VLA ───────── */}
+    <div class="rounded-2xl ring-1 ring-line bg-white p-6 md:p-8">
+      <h3 class="text-[1.375rem] font-semibold text-fg leading-tight mb-3">
+        Bring your own VLA
+      </h3>
+      <p class="text-[17px] leading-[1.6] text-fg-muted mb-5">
+        Wrap any robot in a stdio MCP server that exposes six async methods.
+        The agent talks to it over standard input/output through
+        <strong class="font-semibold text-fg">MCPBackendClient</strong>
+        &mdash; no Python coupling between agent and backend.
+      </p>
+      <pre
+        class="font-mono text-[13px] leading-[1.7] bg-bg-elev text-fg rounded-xl px-5 py-4 overflow-x-auto"><code><span style="color: #5C574E">class</span> VLABackend(Protocol):
+    async def init(self) -&gt; None
+    async def cleanup(self) -&gt; None
+    async def observe(cameras) -&gt; dict[str, str]
+    async def start(instruction: str) -&gt; None
+    async def stop(self) -&gt; None
+    async def is_running(self) -&gt; bool</code></pre>
+    </div>
+
+    {/* ───────── Card 2: BYO Mission ───────── */}
+    <div class="rounded-2xl ring-1 ring-line bg-white p-6 md:p-8">
+      <h3 class="text-[1.375rem] font-semibold text-fg leading-tight mb-3">
+        Bring your own mission
+      </h3>
+      <p class="text-[17px] leading-[1.6] text-fg-muted mb-5">
+        A mission is a directory with three files. Point
+        <strong class="font-semibold text-fg">agent.mission_dir</strong>
+        at it and the planner inherits the new task vocabulary, system prompt,
+        and success criteria.
+      </p>
+      <pre
+        class="font-mono text-[13px] leading-[1.7] bg-bg-elev text-fg rounded-xl px-5 py-4 overflow-x-auto"><code>my_mission/
+├── mission.md     <span style="color: #5C574E"># planner system prompt</span>
+├── tasks.yaml     <span style="color: #5C574E"># task vocabulary</span>
+└── verify.md      <span style="color: #5C574E"># verifier system prompt</span></code></pre>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,43 @@
+---
+const navLinks = [
+  { label: "Capabilities", href: "#capabilities" },
+  { label: "How it works", href: "#how-it-works" },
+  { label: "Quickstart", href: "#quickstart" },
+  { label: "Extend", href: "#extensibility" },
+  { label: "Contributor", href: "#contributor" },
+];
+---
+
+<header
+  class="max-w-7xl mx-auto px-6 md:px-12 pt-10 pb-2 flex items-center justify-between gap-6"
+>
+  <a
+    href="#"
+    class="font-display text-[clamp(1.25rem,1.6vw,1.5rem)] text-fg leading-none tracking-tight whitespace-nowrap"
+  >
+    VLAPilot
+  </a>
+
+  <nav
+    class="hidden md:flex items-center gap-x-6 lg:gap-x-7 text-[15px] text-fg font-display"
+  >
+    {
+      navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="underline underline-offset-[5px] decoration-1 decoration-fg-muted/60 hover:decoration-fg transition-colors"
+        >
+          {link.label}
+        </a>
+      ))
+    }
+    <a
+      href="https://github.com/JinghangLi/vlapilot"
+      target="_blank"
+      rel="noopener"
+      class="underline underline-offset-[5px] decoration-1 decoration-fg-muted/60 hover:decoration-fg transition-colors whitespace-nowrap"
+    >
+      GitHub &rarr;
+    </a>
+  </nav>
+</header>

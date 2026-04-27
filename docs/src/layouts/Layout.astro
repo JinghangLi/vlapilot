@@ -1,0 +1,40 @@
+---
+import "../styles/global.css";
+import { asset } from "../lib/asset";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "VLAPilot — A scheduling agent for any vision-language-action model",
+  description = "A general-purpose agent that pairs a VLM planner and verifier with any VLA backend, turning short-horizon skills into long-horizon missions.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+
+    <link rel="icon" type="image/svg+xml" href={asset("favicon.svg")} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body class="relative">
+    <slot />
+  </body>
+</html>

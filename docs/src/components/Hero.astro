@@ -1,0 +1,147 @@
+---
+import Carousel from "./Carousel.astro";
+import Architecture from "./Architecture.astro";
+import Quickstart from "./Quickstart.astro";
+import Extensibility from "./Extensibility.astro";
+import Team from "./Team.astro";
+import { asset } from "../lib/asset";
+
+const slides = [
+  {
+    src: asset("demo/cleandesk.mp4"),
+    category: "Long-horizon mission",
+    mode: "multi-step · autonomous",
+    speed: "1x",
+    userInstruction: "Clean up the desk",
+    vlaTasks: [
+      "Put the bottle into the white box.",
+      "Put the paper ball into the yellow trash bin.",
+      "Put the red can into the trash bin.",
+    ],
+  },
+  {
+    src: asset("demo/offduty.mp4"),
+    category: "Long-horizon mission",
+    mode: "multi-step · autonomous",
+    speed: "1x",
+    userInstruction: "Wrap up the desk",
+    vlaTasks: [
+      "Close the laptop lid.",
+      "Put the red can into the trash bin.",
+    ],
+  },
+  {
+    src: asset("demo/bottle.mp4"),
+    category: "Object hand-over",
+    mode: "single-step",
+    speed: "1x",
+    userInstruction: "Hand me the bottle",
+    vlaTasks: ["Place the bottle in front of the human."],
+  },
+  {
+    src: asset("demo/screwdriver.mp4"),
+    category: "Object hand-over",
+    mode: "single-step",
+    speed: "1x",
+    userInstruction: "Hand me the screwdriver",
+    vlaTasks: ["Hand the screwdriver in front of the human."],
+  },
+  {
+    src: asset("demo/tissue.mp4"),
+    category: "Object hand-over",
+    mode: "single-step",
+    speed: "1x",
+    userInstruction: "Hand me a tissue",
+    vlaTasks: ["Place the tissue in front of the human."],
+  },
+  {
+    src: asset("demo/pen.mp4"),
+    category: "Object placement",
+    mode: "single-step",
+    speed: "1x",
+    userInstruction: "Put the pen back",
+    vlaTasks: ["Put the pen into the pen holder."],
+  },
+  {
+    src: asset("demo/earpods.mp4"),
+    category: "Object placement",
+    mode: "single-step",
+    speed: "1x",
+    userInstruction: "Charge my earphones",
+    vlaTasks: ["Put the white earphones on the black charger."],
+  },
+  {
+    src: asset("demo/activate.mp4"),
+    category: "Direct interaction",
+    mode: "single-step",
+    speed: "1x",
+    userInstruction: "Wave hello",
+    vlaTasks: ["Wave hello."],
+  },
+];
+---
+
+<article class="px-6 md:px-12 pt-12 md:pt-20 pb-32 md:pb-48 max-w-7xl mx-auto">
+  {/* Title */}
+  <h1
+    class="font-display font-normal text-[clamp(2rem,3.5vw,3.5rem)] leading-[1.1] tracking-[-0.012em] text-fg max-w-4xl balance"
+  >
+    <strong class="font-semibold">VLAPilot</strong>: a scheduling agent for any
+    <span class="whitespace-nowrap">vision&ndash;language&ndash;action</span>
+    model
+  </h1>
+
+  {/* Meta block */}
+  <dl
+    class="mt-10 md:mt-12 grid grid-cols-[max-content_1fr] gap-x-8 gap-y-2 text-[13px] font-mono"
+  >
+    <dt class="text-fg-muted">Published</dt>
+    <dd class="text-fg">April 2026</dd>
+
+    <dt class="text-fg-muted">Code</dt>
+    <dd>
+      <a
+        href="https://github.com/JinghangLi/vlapilot"
+        class="text-fg underline underline-offset-2 decoration-line hover:decoration-fg transition"
+        target="_blank"
+        rel="noopener"
+      >
+        github.com/JinghangLi/vlapilot
+      </a>
+    </dd>
+
+    <dt class="text-fg-muted">License</dt>
+    <dd class="text-fg">MIT</dd>
+  </dl>
+
+  {/* Capability carousel */}
+  <Carousel slides={slides} />
+
+  {/* Body manifesto */}
+  <div class="mt-16 max-w-3xl space-y-7 font-display text-fg">
+    <p class="text-[24px] leading-[1.5]">
+      Vision-language-action models can act, but they cannot plan.
+      <strong class="font-semibold">VLAPilot</strong> is a general-purpose
+      agent that pairs a VLM planner and a separate VLM verifier with any
+      VLA backend, turning short-horizon skills into long-horizon missions.
+    </p>
+    <p class="text-[20px] leading-[1.6] text-fg-muted">
+      The planner keeps an explicit, revisable plan &mdash; every step is
+      traceable and every failure is recoverable.
+      <strong class="font-semibold text-fg">MCP-native on both ends</strong>:
+      any upstream agent can drive it, and any robot can plug in.
+    </p>
+  </div>
+
+  {/* Section: Architecture (How a run works) */}
+  <Architecture />
+
+  {/* Section: Quickstart */}
+  <Quickstart />
+
+  {/* Section: Extensibility */}
+  <Extensibility />
+
+  {/* Section: Team */}
+  <Team />
+</article>

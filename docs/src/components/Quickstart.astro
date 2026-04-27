@@ -1,0 +1,83 @@
+---
+---
+
+<section
+  id="quickstart"
+  class="mt-20 font-display scroll-mt-24"
+>
+  <h2
+    class="text-[clamp(1.5rem,2.4vw,1.875rem)] font-medium text-fg leading-tight mb-6 max-w-3xl"
+  >
+    Quickstart
+  </h2>
+
+  <p class="text-[19px] leading-[1.65] text-fg max-w-3xl mb-12">
+    Three steps. Python 3.10 or higher.
+  </p>
+
+  <div class="space-y-14 max-w-3xl">
+    {/* ─── Install ─── */}
+    <div>
+      <h3
+        class="font-mono text-[13px] font-semibold uppercase tracking-[0.2em] text-fg-muted mb-4"
+      >
+        1 &middot; Install
+      </h3>
+      <pre
+        class="font-mono text-[14px] leading-[1.7] bg-bg-elev text-fg rounded-xl px-6 py-5 overflow-x-auto ring-1 ring-line"><code>git clone https://github.com/JinghangLi/vlapilot.git
+cd vlapilot
+pip install -e ".[examples]"</code></pre>
+    </div>
+
+    {/* ─── Configure ─── */}
+    <div>
+      <h3
+        class="font-mono text-[13px] font-semibold uppercase tracking-[0.2em] text-fg-muted mb-4"
+      >
+        2 &middot; Configure
+      </h3>
+      <p class="text-[18px] leading-[1.65] text-fg mb-4">
+        Copy the template into
+        <strong class="font-semibold">~/.vlapilot/</strong>, then fill in your
+        API keys and point
+        <strong class="font-semibold">agent.mission_dir</strong> at a mission
+        folder.
+      </p>
+      <pre
+        class="font-mono text-[14px] leading-[1.7] bg-bg-elev text-fg rounded-xl px-6 py-5 overflow-x-auto ring-1 ring-line"><code>mkdir -p ~/.vlapilot
+cp config.example.json ~/.vlapilot/config.json
+
+# Then edit ~/.vlapilot/config.json:
+#   agent.planner.api_key        — LLM key for the planner
+#   agent.verify.providers.*     — VLM key for the verifier
+#   agent.mission_dir            — path to a mission directory</code></pre>
+    </div>
+
+    {/* ─── Run ─── */}
+    <div>
+      <h3
+        class="font-mono text-[13px] font-semibold uppercase tracking-[0.2em] text-fg-muted mb-4"
+      >
+        3 &middot; Run
+      </h3>
+      <p class="text-[18px] leading-[1.65] text-fg mb-4">
+        Drive it directly from the CLI for a one-shot mission:
+      </p>
+      <pre
+        class="font-mono text-[14px] leading-[1.7] bg-bg-elev text-fg rounded-xl px-6 py-5 overflow-x-auto ring-1 ring-line"><code>python scripts/run_agent.py \
+  --config ~/.vlapilot/config.json \
+  -i "Clean up everything on the desk."</code></pre>
+
+      <p class="text-[18px] leading-[1.65] text-fg mt-7 mb-4">
+        Or expose it as an MCP server so any upstream agent can drive it:
+      </p>
+      <pre
+        class="font-mono text-[14px] leading-[1.7] bg-bg-elev text-fg rounded-xl px-6 py-5 overflow-x-auto ring-1 ring-line"><code>vlapilot --config ~/.vlapilot/config.json</code></pre>
+
+      <p class="text-[14px] leading-[1.6] text-fg-muted mt-4 font-mono">
+        Tools exposed: start_mission &middot; get_status &middot;
+        cancel_mission &middot; list_capabilities
+      </p>
+    </div>
+  </div>
+</section>

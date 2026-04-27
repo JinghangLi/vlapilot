@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  /* Pale near-white warm palette (closer to anthropic.com) */
+  --color-bg: #F8F4EC;
+  --color-bg-elev: #F0EBE0;
+  --color-fg: #1A1A1A;
+  --color-fg-muted: #3A352D;
+  --color-fg-faint: #8B8479;
+  --color-line: #E5DFD0;
+  --color-cream: #FFFFFF;
+  --color-accent: #A03A2E;
+
+  /* Display: Spectral (Tiempos-alike, free); Body: Inter */
+  --font-display: "Spectral", "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@layer base {
+  html {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-fg);
+    color: var(--color-bg);
+  }
+
+  /* Balanced multi-line wrap for headlines */
+  .balance {
+    text-wrap: balance;
+  }
+}

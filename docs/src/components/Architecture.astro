@@ -1,0 +1,563 @@
+---
+---
+
+<section
+  id="how-it-works"
+  class="mt-20 font-display scroll-mt-16"
+>
+  <h2
+    class="text-[clamp(1.5rem,2.4vw,1.875rem)] font-medium text-fg leading-tight mb-6 max-w-3xl"
+  >
+    How a run works
+  </h2>
+
+  <p class="text-[19px] leading-[1.65] text-fg max-w-3xl mb-10">
+    A run is an outer loop driven by an upstream caller. Inside VLAPilot, a
+    ReAct runner orchestrates two VLMs &mdash; a planner that decides what to
+    do next, and a verifier that watches each step. The runner mediates every
+    interaction with the VLA backend, which lives in a separate child process
+    and owns all hardware control.
+  </p>
+
+  <!-- Architecture diagram (SVG) -->
+  <figure class="mb-14">
+    <div class="relative bg-bg-elev rounded-2xl ring-1 ring-line p-3 md:p-5">
+      <svg
+        viewBox="0 0 1200 800"
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-full h-auto block"
+        aria-label="VLAPilot architecture: upstream, VLAPilot, VLA backend"
+      >
+        <defs>
+          <marker
+            id="arrow-gray"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="8"
+            markerHeight="8"
+            orient="auto"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#5C574E"></path>
+          </marker>
+          <marker
+            id="arrow-gray-start"
+            viewBox="0 0 10 10"
+            refX="1"
+            refY="5"
+            markerWidth="8"
+            markerHeight="8"
+            orient="auto"
+          >
+            <path d="M 10 0 L 0 5 L 10 10 z" fill="#5C574E"></path>
+          </marker>
+          <marker
+            id="arrow-gold"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="9"
+            markerHeight="9"
+            orient="auto"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#C9982E"></path>
+          </marker>
+        </defs>
+
+        <!-- ═══════════ UPSTREAM (top) ═══════════ -->
+        <rect
+          x="430"
+          y="20"
+          width="340"
+          height="80"
+          rx="12"
+          fill="#FFFFFF"
+          stroke="#E5DFD0"
+          stroke-width="1.2"></rect>
+        <text
+          x="600"
+          y="52"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="14"
+          font-weight="600"
+          fill="#3A352D"
+          letter-spacing="2.5">UPSTREAM</text>
+        <text
+          x="600"
+          y="80"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="17"
+          fill="#1A1A1A">CLI or MCP client</text>
+
+        <!-- Upstream → VLAPilot arrow -->
+        <line
+          x1="600"
+          y1="102"
+          x2="600"
+          y2="170"
+          stroke="#5C574E"
+          stroke-width="1.6"
+          marker-end="url(#arrow-gray)"></line>
+        <text
+          x="612"
+          y="142"
+          font-family="JetBrains Mono, monospace"
+          font-size="13"
+          font-weight="500"
+          fill="#5C574E"
+          letter-spacing="1.5">user goal &middot; MCP / CLI</text>
+
+        <!-- ═══════════ VLAPILOT (middle container) ═══════════ -->
+        <rect
+          x="40"
+          y="180"
+          width="1120"
+          height="340"
+          rx="18"
+          fill="transparent"
+          stroke="#C9982E"
+          stroke-width="1.5"
+          stroke-dasharray="6 4"></rect>
+        <text
+          x="60"
+          y="208"
+          font-family="JetBrains Mono, monospace"
+          font-size="15"
+          font-weight="600"
+          fill="#C9982E"
+          letter-spacing="2.5">VLAPILOT</text>
+
+        <!-- PLANNER box (left) -->
+        <rect
+          x="80"
+          y="240"
+          width="300"
+          height="220"
+          rx="14"
+          fill="#FFFFFF"
+          stroke="#E5DFD0"
+          stroke-width="1.2"></rect>
+        <text
+          x="230"
+          y="284"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="16"
+          font-weight="600"
+          fill="#3A352D"
+          letter-spacing="2.2">VLM PLANNER</text>
+        <text
+          x="230"
+          y="328"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">writes &amp; revises</text>
+        <text
+          x="230"
+          y="358"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">the plan; dispatches</text>
+        <text
+          x="230"
+          y="388"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">one task per turn</text>
+
+        <!-- RUNNER box (center) -->
+        <rect
+          x="450"
+          y="240"
+          width="300"
+          height="220"
+          rx="14"
+          fill="#FFFFFF"
+          stroke="#E5DFD0"
+          stroke-width="1.2"></rect>
+        <text
+          x="600"
+          y="284"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="16"
+          font-weight="600"
+          fill="#3A352D"
+          letter-spacing="2.2">REACT RUNNER</text>
+        <text
+          x="600"
+          y="328"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">runs the ReAct loop:</text>
+        <text
+          x="600"
+          y="358"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">auto-observes, then</text>
+        <text
+          x="600"
+          y="388"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">routes tool calls</text>
+
+        <!-- VERIFIER box (right) -->
+        <rect
+          x="820"
+          y="240"
+          width="300"
+          height="220"
+          rx="14"
+          fill="#FFFFFF"
+          stroke="#E5DFD0"
+          stroke-width="1.2"></rect>
+        <text
+          x="970"
+          y="284"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="16"
+          font-weight="600"
+          fill="#3A352D"
+          letter-spacing="2.2">VLM VERIFIER</text>
+        <text
+          x="970"
+          y="328"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">compares baseline</text>
+        <text
+          x="970"
+          y="358"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">vs. current frames</text>
+        <text
+          x="970"
+          y="388"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">every ~2 seconds</text>
+
+        <!-- Verdict pills inside VERIFIER box (bigger now) -->
+        <g transform="translate(844, 410)">
+          <rect
+            width="100"
+            height="34"
+            rx="17"
+            fill="#FBF7EC"
+            stroke="#C9982E"
+            stroke-width="1.5"></rect>
+          <text
+            x="50"
+            y="22"
+            text-anchor="middle"
+            font-family="Spectral, serif"
+            font-size="15"
+            font-weight="600"
+            fill="#1A1A1A">completed</text>
+        </g>
+        <g transform="translate(952, 410)">
+          <rect
+            width="80"
+            height="34"
+            rx="17"
+            fill="#FBF7EC"
+            stroke="#C9982E"
+            stroke-width="1.5"></rect>
+          <text
+            x="40"
+            y="22"
+            text-anchor="middle"
+            font-family="Spectral, serif"
+            font-size="15"
+            font-weight="600"
+            fill="#1A1A1A">pending</text>
+        </g>
+        <g transform="translate(1040, 410)">
+          <rect
+            width="70"
+            height="34"
+            rx="17"
+            fill="#FBF7EC"
+            stroke="#C9982E"
+            stroke-width="1.5"></rect>
+          <text
+            x="35"
+            y="22"
+            text-anchor="middle"
+            font-family="Spectral, serif"
+            font-size="15"
+            font-weight="600"
+            fill="#1A1A1A">failed</text>
+        </g>
+
+        <!-- PLANNER ⇄ RUNNER edges -->
+        <line
+          x1="385"
+          y1="328"
+          x2="445"
+          y2="328"
+          stroke="#5C574E"
+          stroke-width="1.4"
+          marker-end="url(#arrow-gray)"></line>
+        <text
+          x="415"
+          y="320"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="12"
+          font-weight="500"
+          fill="#5C574E"
+          letter-spacing="1">tool_call</text>
+
+        <line
+          x1="445"
+          y1="372"
+          x2="385"
+          y2="372"
+          stroke="#5C574E"
+          stroke-width="1.4"
+          marker-end="url(#arrow-gray)"></line>
+        <text
+          x="415"
+          y="392"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="12"
+          font-weight="500"
+          fill="#5C574E"
+          letter-spacing="1">frames + history</text>
+
+        <!-- RUNNER ⇄ VERIFIER edges -->
+        <line
+          x1="755"
+          y1="328"
+          x2="815"
+          y2="328"
+          stroke="#5C574E"
+          stroke-width="1.4"
+          marker-end="url(#arrow-gray)"></line>
+        <text
+          x="785"
+          y="320"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="12"
+          font-weight="500"
+          fill="#5C574E"
+          letter-spacing="1">frames</text>
+
+        <line
+          x1="815"
+          y1="372"
+          x2="755"
+          y2="372"
+          stroke="#C9982E"
+          stroke-width="1.8"
+          marker-end="url(#arrow-gold)"></line>
+        <text
+          x="785"
+          y="392"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="12"
+          font-weight="600"
+          fill="#C9982E"
+          letter-spacing="1">verdict</text>
+
+        <!-- Runner → VLA Backend (down, bidirectional) -->
+        <line
+          x1="600"
+          y1="460"
+          x2="600"
+          y2="600"
+          stroke="#5C574E"
+          stroke-width="1.6"
+          marker-end="url(#arrow-gray)"
+          marker-start="url(#arrow-gray-start)"></line>
+        <rect
+          x="500"
+          y="515"
+          width="200"
+          height="26"
+          fill="#F0EBE0"
+          rx="2"></rect>
+        <text
+          x="600"
+          y="533"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="13"
+          font-weight="500"
+          fill="#5C574E"
+          letter-spacing="1.5">observe / start / stop</text>
+
+        <!-- ═══════════ VLA BACKEND (bottom container) ═══════════ -->
+        <rect
+          x="40"
+          y="600"
+          width="1120"
+          height="200"
+          rx="18"
+          fill="transparent"
+          stroke="#5C574E"
+          stroke-width="1.5"
+          stroke-dasharray="6 4"></rect>
+        <text
+          x="60"
+          y="628"
+          font-family="JetBrains Mono, monospace"
+          font-size="15"
+          font-weight="600"
+          fill="#5C574E"
+          letter-spacing="2.5"
+          >VLA BACKEND &middot; CHILD MCP PROCESS</text>
+
+        <!-- MCP server box -->
+        <rect
+          x="160"
+          y="660"
+          width="380"
+          height="120"
+          rx="14"
+          fill="#FFFFFF"
+          stroke="#E5DFD0"
+          stroke-width="1.2"></rect>
+        <text
+          x="350"
+          y="700"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="16"
+          font-weight="600"
+          fill="#3A352D"
+          letter-spacing="2.2">STDIO MCP SERVER</text>
+        <text
+          x="350"
+          y="734"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">exposes the VLABackend protocol</text>
+        <text
+          x="350"
+          y="760"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="16"
+          font-style="italic"
+          fill="#5C574E">e.g. vla_pi05_piper</text>
+
+        <!-- Robot box -->
+        <rect
+          x="660"
+          y="660"
+          width="380"
+          height="120"
+          rx="14"
+          fill="#FFFFFF"
+          stroke="#E5DFD0"
+          stroke-width="1.2"></rect>
+        <text
+          x="850"
+          y="700"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="16"
+          font-weight="600"
+          fill="#3A352D"
+          letter-spacing="2.2">ROBOT ARM + CAMERAS</text>
+        <text
+          x="850"
+          y="734"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">30 Hz policy inference</text>
+        <text
+          x="850"
+          y="760"
+          text-anchor="middle"
+          font-family="Spectral, serif"
+          font-size="18"
+          fill="#1A1A1A">and continuous control</text>
+
+        <!-- MCP server ⇄ Robot edge -->
+        <line
+          x1="545"
+          y1="710"
+          x2="655"
+          y2="710"
+          stroke="#5C574E"
+          stroke-width="1.4"
+          marker-end="url(#arrow-gray)"
+          marker-start="url(#arrow-gray-start)"></line>
+        <text
+          x="600"
+          y="702"
+          text-anchor="middle"
+          font-family="JetBrains Mono, monospace"
+          font-size="12"
+          font-weight="500"
+          fill="#5C574E"
+          letter-spacing="1">control / frames</text>
+      </svg>
+    </div>
+    <figcaption
+      class="mt-3 text-center font-mono text-[12px] text-fg-muted tracking-wide"
+    >
+      The ReAct runner mediates every interaction. The gold arrow is the
+      verdict that closes the verify loop.
+    </figcaption>
+  </figure>
+
+  <!-- Verifier deep-dive paragraphs -->
+  <div class="space-y-5 text-[19px] leading-[1.65] text-fg max-w-3xl">
+    <p>
+      While a task is running, a separate VLM polls roughly every two
+      seconds. Each call gives the VLM the
+      <strong class="font-semibold">baseline frames</strong> &mdash; captured
+      right before the task started &mdash; alongside the
+      <strong class="font-semibold">current frames</strong>, then asks
+      whether the goal has been reached. The reply is one of three verdicts:
+      <strong class="font-semibold">completed</strong> when the task has
+      succeeded, <strong class="font-semibold">pending</strong> while it is
+      still in progress, or <strong class="font-semibold">failed</strong>
+      when the task cannot recover.
+    </p>
+    <p>
+      The runner stops the VLA as soon as the verdict turns terminal &mdash;
+      either <strong class="font-semibold">completed</strong> or
+      <strong class="font-semibold">failed</strong>. A
+      <strong class="font-semibold">failed</strong> verdict hands control
+      straight back to the planner, which can re-plan, retry, or skip the
+      step. A <strong class="font-semibold">pending</strong> reply &mdash;
+      or one the parser cannot read &mdash; keeps the verifier polling until
+      the task finishes or hits its timeout.
+    </p>
+    <p class="text-fg-muted">
+      Because the verifier and the planner draw from the same camera feed,
+      they share a single view of the scene. This lets the planner stay
+      focused on structure &mdash; producing a plan, dispatching one task,
+      then waiting &mdash; without having to decide for itself when each
+      step is done. And since every mission carries its own
+      <strong class="font-semibold text-fg">verify.md</strong> prompt, the
+      success criteria for cleaning a desk are different from those for a
+      kitchen task: the contract is per mission, but the loop is the same.
+    </p>
+  </div>
+</section>
